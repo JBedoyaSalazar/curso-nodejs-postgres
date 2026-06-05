@@ -19,3 +19,29 @@ services:
       - 5050:80
     volumes:
       - ./pgadmin_data:/var/lib/pgadmin
+
+  mysql:
+    image: mysql:latest
+    environment:
+      - MYSQL_DATABASE=my_store
+      - MYSQL_USER=jefred
+      - MYSQL_PASSWORD=admin123
+      - MYSQL_ROOT_PASSWORD=admin123
+    ports:
+      - 3307:3306
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    depends_on:
+      - mysql
+    environment:
+      - PMA_HOST=mysql
+      - PMA_PORT=3306
+      - PMA_USER=root
+      - PMA_PASSWORD=admin123
+    ports:
+      - 8081:80
+    volumes:
+      - ./phpmyadmin_data:/sessions

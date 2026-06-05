@@ -197,3 +197,5 @@ $RECYCLE.BIN/
 # Docker volumes
 postgres_data/
 pgadmin_data/
+mysql_data/
+phpmyadmin_data/
