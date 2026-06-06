@@ -5,7 +5,9 @@ export default class CustomerService {
   constructor() { }
 
   async find() {
-    const res = await models.Customer.findAll()
+    const res = await models.Customer.findAll({
+      include: ['user']
+    })
     return res
   }
 
