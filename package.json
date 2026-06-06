@@ -7,7 +7,10 @@
   "scripts": {
     "dev": "node --env-file=.env --watch index.js",
     "start": "node --env-file=.env index.js",
-    "lint": "eslint"
+    "lint": "eslint",
+    "migrations:generate":"node --env-file=.env ./node_modules/sequelize-cli/lib/sequelize migration:generate --name",
+    "db:migrate": "node --env-file=.env ./node_modules/sequelize-cli/lib/sequelize db:migrate",
+    "db:migrate:undo": "node --env-file=.env ./node_modules/sequelize-cli/lib/sequelize db:migrate:undo"
   },
   "keywords": [],
   "author": "",
