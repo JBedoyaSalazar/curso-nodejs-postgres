@@ -7,4 +7,5 @@ export function setupModels(sequelize) {
 
 
   Customer.associate(sequelize.models)
+  User.associate(sequelize.models)
 }
