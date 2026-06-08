@@ -1,34 +1,48 @@
 import boom from '@hapi/boom';
-import pool from '../libs/postgres.pool.js';
+import { models } from './../libs/sequelize.js'
 
 class OrderService {
 
-  constructor(){
-    this.pool = pool;
-    this.pool.on('error', err => console.error(err));
-  }
+  constructor() { }
+
   async create(data) {
-    return data;
+    const newOrder = await models.Order.create(data)
+    return newOrder;
   }
 
   async find() {
-    const query = 'SELECT * FROM tasks';
-    const res = await this.pool.query(query);
-    return res.rows;
+    const orders = await models.Order.findAll({
+      include: ['customer']
+    })
+    return orders;
   }
 
   async findOne(id) {
-    return { id };
+    const Order = await models.Order.findByPk(id, {
+      include: [
+        {
+          association: 'customer',
+          include: ['user']
+        }
+      ]
+    });
+
+    if (!Order) {
+      throw boom.notFound('Order not found')
+    }
+
+    return Order
   }
 
   async update(id, changes) {
-    return {
-      id,
-      changes,
-    };
+    const order = await this.findOne(id)
+    const res = await order.update(changes)
+    return res
   }
 
   async delete(id) {
+    const order = await this.findOne(id)
+    order.destroy()
     return { id };
   }
 
