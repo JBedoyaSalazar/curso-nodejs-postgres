@@ -23,7 +23,9 @@ class OrderService {
           include: ['user']
         },
         'items'
-      ]
+      ],
+      offset: 0,
+      limit: 10
     })
     return orders;
   }

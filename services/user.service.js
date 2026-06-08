@@ -11,7 +11,9 @@ class UserService {
 
   async find() {
     const res = await models.User.findAll({
-      include: ['customer']
+      include: ['customer'],
+      offset: 0,
+      limit: 10
     });
     return res;
   }

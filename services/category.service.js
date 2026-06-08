@@ -11,7 +11,10 @@ class CategoryService {
   }
 
   async find() {
-    const res = await models.Category.findAll();
+    const res = await models.Category.findAll({
+      offset: 0,
+      limit: 10
+    });
     return res;
   }
 

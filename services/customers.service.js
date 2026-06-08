@@ -7,7 +7,9 @@ export default class CustomerService {
 
   async find() {
     const res = await models.Customer.findAll({
-      include: ['user']
+      include: ['user'],
+      offset: 0,
+      limit: 10
     })
     return res
   }

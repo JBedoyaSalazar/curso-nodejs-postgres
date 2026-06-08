@@ -4,22 +4,7 @@ import { models } from '../libs/sequelize.js';
 
 class ProductsService {
 
-  constructor(){
-    // this.generate();
-  }
-
-  // generate() {
-  //   const limit = 100;
-  //   for (let index = 0; index < limit; index++) {
-  //     this.products.push({
-  //       id: faker.datatype.uuid(),
-  //       name: faker.commerce.productName(),
-  //       price: parseInt(faker.commerce.price(), 10),
-  //       image: faker.image.imageUrl(),
-  //       isBlock: faker.datatype.boolean(),
-  //     });
-  //   }
-  // }
+  constructor() { }
 
   async create(data) {
     const newProduct = await models.Product.create(data);
@@ -28,7 +13,9 @@ class ProductsService {
 
   async find() {
     const products = await models.Product.findAll({
-      include: ['category']
+      include: ['category'],
+      offset: 0,
+      limit: 10
     })
     return products;
   }
@@ -38,7 +25,7 @@ class ProductsService {
       include: ['category']
     });
 
-    if(!product){
+    if (!product) {
       throw boom.notFound('product not found')
     }
 
