@@ -5,12 +5,18 @@ import { sequelize } from "../libs/sequelize.js";
 export default class CustomerService {
   constructor() { }
 
-  async find() {
-    const res = await models.Customer.findAll({
-      include: ['user'],
-      offset: 0,
-      limit: 10
-    })
+  async find(query) {
+    const options = {
+      include: ['user']
+    }
+
+    const { limit, offset } = query
+    if (limit && offset) {
+      options.limit = limit
+      options.offset = offset
+    }
+
+    const res = await models.Customer.findAll(options)
     return res
   }
 

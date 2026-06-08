@@ -15,18 +15,25 @@ class OrderService {
     return newItem
   }
 
-  async find() {
-    const orders = await models.Order.findAll({
+  async find(query) {
+    const options = {
       include: [
         {
           association: 'customer',
           include: ['user']
         },
         'items'
-      ],
-      offset: 0,
-      limit: 10
-    })
+      ]
+    };
+
+    const { limit, offset } = query;
+
+    if (limit && offset) {
+      options.limit = limit
+      options.offset = offset
+    }
+
+    const orders = await models.Order.findAll(options)
     return orders;
   }
 

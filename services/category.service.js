@@ -3,18 +3,24 @@ import { models } from '../libs/sequelize.js';
 
 class CategoryService {
 
-  constructor(){}
+  constructor() { }
 
   async create(data) {
     const newCategory = await models.Category.create(data)
     return newCategory;
   }
 
-  async find() {
-    const res = await models.Category.findAll({
-      offset: 0,
-      limit: 10
-    });
+  async find(query) {
+
+    const options = {}
+
+    const { limit, offset } = query
+    if (limit && offset) {
+      options.limit = limit
+      options.offset = offset
+    }
+
+    const res = await models.Category.findAll(options);
     return res;
   }
 
@@ -23,7 +29,7 @@ class CategoryService {
       include: ['products']
     })
 
-    if(!category){
+    if (!category) {
       throw boom.notFound('Category not found')
     }
 
