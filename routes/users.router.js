@@ -1,19 +1,21 @@
 import express from 'express';
 import UserService from './../services/user.service.js';
 import validatorHandler from './../middlewares/validator.handler.js';
-import { updateUserSchema, createUserSchema, getUserSchema } from './../schemas/user.schema.js';
+import { updateUserSchema, createUserSchema, getUserSchema, queryUserSchema } from './../schemas/user.schema.js';
 
 const router = express.Router();
 const service = new UserService();
 
-router.get('/', async (req, res, next) => {
-  try {
-    const categories = await service.find();
-    res.json(categories);
-  } catch (error) {
-    next(error);
-  }
-});
+router.get('/',
+  validatorHandler(queryUserSchema, 'query'),
+  async (req, res, next) => {
+    try {
+      const categories = await service.find(req.query);
+      res.json(categories);
+    } catch (error) {
+      next(error);
+    }
+  });
 
 router.get('/:id',
   validatorHandler(getUserSchema, 'params'),
@@ -62,7 +64,7 @@ router.delete('/:id',
     try {
       const { id } = req.params;
       await service.delete(id);
-      res.status(201).json({id});
+      res.status(201).json({ id });
     } catch (error) {
       next(error);
     }

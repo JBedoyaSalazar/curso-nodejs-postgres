@@ -2,14 +2,16 @@ import express from 'express';
 
 import CategoryService from './../services/category.service.js';
 import validatorHandler from './../middlewares/validator.handler.js';
-import { createCategorySchema, updateCategorySchema, getCategorySchema } from './../schemas/category.schema.js';
+import { createCategorySchema, updateCategorySchema, getCategorySchema, queryCategorySchema } from './../schemas/category.schema.js';
 
 const router = express.Router();
 const service = new CategoryService();
 
-router.get('/', async (req, res, next) => {
+router.get('/',
+  validatorHandler(queryCategorySchema, 'query'),
+  async (req, res, next) => {
   try {
-    const categories = await service.find();
+    const categories = await service.find(req.query);
     res.json(categories);
   } catch (error) {
     next(error);

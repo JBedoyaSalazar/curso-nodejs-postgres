@@ -1,19 +1,21 @@
 import express from 'express';
 import OrderService from './../services/order.service.js';
 import validatorHandler from '../middlewares/validator.handler.js';
-import { createOrderSchema, updateOrderSchema, getOrderSchema, addItemSchema } from '../schemas/order.schema.js';
+import { createOrderSchema, updateOrderSchema, getOrderSchema, addItemSchema, queryOrderSchema } from '../schemas/order.schema.js';
 
 const router = express.Router();
 const service = new OrderService();
 
-router.get('/', async (req, res, next) => {
-  try {
-    const orders = await service.find();
-    res.json(orders);
-  } catch (error) {
-    next(error);
-  }
-});
+router.get('/',
+  validatorHandler(queryOrderSchema, 'query'),
+  async (req, res, next) => {
+    try {
+      const orders = await service.find(req.query);
+      res.json(orders);
+    } catch (error) {
+      next(error);
+    }
+  });
 
 router.get('/:id',
   validatorHandler(getOrderSchema, 'params'),
@@ -62,7 +64,7 @@ router.delete('/:id',
     try {
       const { id } = req.params;
       await service.delete(id);
-      res.status(201).json({id});
+      res.status(201).json({ id });
     } catch (error) {
       next(error);
     }

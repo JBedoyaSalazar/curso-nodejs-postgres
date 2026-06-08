@@ -1,15 +1,17 @@
 import express from 'express'
 import CustomerService from '../services/customers.service.js'
 import validatorHandler from './../middlewares/validator.handler.js';
-import { createUserSchema, getCustomerSchema, updateCustomerSchema } from '../schemas/customer.schema.js';
+import { createUserSchema, getCustomerSchema, updateCustomerSchema, queryCustomerSchema } from '../schemas/customer.schema.js';
 
 
 const router = express.Router()
 const service = new CustomerService()
 
-router.get('/', async (req, res, next) => {
+router.get('/',
+  validatorHandler(queryCustomerSchema, 'query'),
+  async (req, res, next) => {
   try {
-    res.json(await service.find())
+    res.json(await service.find(req.query))
   } catch (e) {
     next(e)
   }
