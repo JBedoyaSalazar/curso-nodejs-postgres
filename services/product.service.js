@@ -1,4 +1,4 @@
-// import { faker } from '@faker-js/faker';
+import { Op } from 'sequelize';
 import boom from '@hapi/boom';
 import { models } from '../libs/sequelize.js';
 
@@ -14,13 +14,25 @@ class ProductsService {
   async find(query) {
     const options = {
       include: ['category'],
+      where: {}
     }
 
-    const { limit, offset } = query
-    if(limit && offset){
+    const { limit, offset, price, price_min, price_max } = query
+    if (limit && offset) {
       options.limit = limit
       options.offset = offset
     }
+
+    if (price) {
+      options.where.price = price
+    }
+
+    if(price_min && price_max){
+      options.where.price = {
+        [Op.between]:[price_min, price_max]
+      }
+    }
+
     const products = await models.Product.findAll(options)
     return products;
   }
