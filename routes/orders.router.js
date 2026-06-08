@@ -1,7 +1,7 @@
 import express from 'express';
 import OrderService from './../services/order.service.js';
 import validatorHandler from '../middlewares/validator.handler.js';
-import { createOrderSchema, updateOrderSchema, getOrderSchema } from '../schemas/order.schema.js';
+import { createOrderSchema, updateOrderSchema, getOrderSchema, addItemSchema } from '../schemas/order.schema.js';
 
 const router = express.Router();
 const service = new OrderService();
@@ -63,6 +63,19 @@ router.delete('/:id',
       const { id } = req.params;
       await service.delete(id);
       res.status(201).json({id});
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.post('/add-item',
+  validatorHandler(addItemSchema, 'body'),
+  async (req, res, next) => {
+    try {
+      const body = req.body;
+      const newItem = await service.addItem(body);
+      res.status(201).json(newItem);
     } catch (error) {
       next(error);
     }
