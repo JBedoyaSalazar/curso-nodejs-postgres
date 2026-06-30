@@ -176,7 +176,7 @@ La aplicación utiliza PostgreSQL y Sequelize. Las tablas definidas son:
 ### Entidades principales
 
 - `User`
-  - `id`, `email`, `password`, `role`, `create_at`
+  - `id`, `email`, `password`, `role`, `created_at`
 - `Customer`
   - `id`, `name`, `last_name`, `phone`, `user_id`, `created_at`
 - `Category`
@@ -193,7 +193,7 @@ La aplicación utiliza PostgreSQL y Sequelize. Las tablas definidas son:
 ### User
 
 - Tabla: `users`
-- Campos: `id`, `email`, `password`, `role`, `create_at`
+- Campos: `id`, `email`, `password`, `role`, `created_at`
 - Relación: `hasOne(Customer)`
 
 ### Customer

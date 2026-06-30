@@ -5,7 +5,7 @@ import { PRODUCT_TABLE } from "./product.model.js"
 const ORDER_PRODUCT_TABLE = "orders_products"
 
 /** @type {import('sequelize').ModelAttributes} */
-const OrderProcductSchema = {
+const OrderProductSchema = {
   id: {
     allowNull: false,
     autoIncrement: true,
@@ -25,7 +25,7 @@ const OrderProcductSchema = {
       key: 'id'
     },
     onUpdate: 'CASCADE',
-    onDelete: 'SET NULL'
+    onDelete: 'RESTRICT'
   },
   productId: {
     allowNull: false,
@@ -36,7 +36,7 @@ const OrderProcductSchema = {
       key: 'id'
     },
     onUpdate: 'CASCADE',
-    onDelete: 'SET NULL'
+    onDelete: 'RESTRICT'
   },
   createdAt: {
     allowNull: false,
@@ -62,4 +62,4 @@ class OrderProduct extends Model {
 }
 
 
-export { ORDER_PRODUCT_TABLE, OrderProcductSchema, OrderProduct };
+export { ORDER_PRODUCT_TABLE, OrderProductSchema, OrderProduct };

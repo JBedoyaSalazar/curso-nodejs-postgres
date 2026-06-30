@@ -13,7 +13,10 @@ const UserSchema = {
   email: {
     allowNull: false,
     type: DataTypes.STRING,
-    unique: true
+    unique: true,
+    validate:{
+      isEmail:true
+    }
   },
   password: {
     allowNull: false,
@@ -27,7 +30,7 @@ const UserSchema = {
   createdAt: {
     allowNull: false,
     type: DataTypes.DATE,
-    field: 'create_at',
+    field: 'created_at',
     defaultValue: Sequelize.NOW
   }
 };
