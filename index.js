@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import routerApi from './routes/index.js';
 import { checkApiKey } from './middlewares/auth.handler.js';
+import './utils/auth/index.js';
 
 import { logErrors, errorHandler, boomErrorHandler, ormErrorHandler } from './middlewares/error.handler.js';
 
@@ -20,6 +21,7 @@ const options = {
     }
   }
 }
+
 app.use(cors(options));
 
 app.get('/', (req, res) => {
