@@ -1,6 +1,7 @@
 import boom from "@hapi/boom";
 import { models } from "../libs/sequelize.js";
 import { sequelize } from "../libs/sequelize.js";
+import bycrypt from "bcrypt";
 
 export default class CustomerService {
   constructor() { }
@@ -31,6 +32,8 @@ export default class CustomerService {
   }
 
   async create(data) {
+    const hash = await bycrypt.hash(data.user.password, 10);
+    data.user.password = hash;
     const transaction = await sequelize.transaction();
 
     try {

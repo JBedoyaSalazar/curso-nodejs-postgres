@@ -1,11 +1,15 @@
 import boom from '@hapi/boom';
 import { models } from '../libs/sequelize.js';
+import bycrypt from 'bcrypt';
 
 class UserService {
   constructor() { }
 
   async create(data) {
+    const hash = await bycrypt.hash(data.password, 10);
+    data.password = hash;
     const newUser = await models.User.create(data);
+    delete newUser.dataValues.password;
     return newUser;
   }
 
