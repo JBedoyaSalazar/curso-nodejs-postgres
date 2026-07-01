@@ -8,7 +8,7 @@
     "dev": "node --env-file=.env --watch index.js",
     "start": "node --env-file=.env index.js",
     "lint": "eslint",
-    "migrations:generate":"node --env-file=.env ./node_modules/sequelize-cli/lib/sequelize migration:generate --name",
+    "migrations:generate": "node --env-file=.env ./node_modules/sequelize-cli/lib/sequelize migration:generate --name",
     "db:migrate": "node --env-file=.env ./node_modules/sequelize-cli/lib/sequelize db:migrate",
     "db:migrate:undo": "node --env-file=.env ./node_modules/sequelize-cli/lib/sequelize db:migrate:undo"
   },
@@ -29,6 +29,7 @@
   "dependencies": {
     "@faker-js/faker": "^7.6.0",
     "@hapi/boom": "^9.1.4",
+    "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "joi": "^17.4.2"
