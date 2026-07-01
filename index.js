@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import routerApi from './routes/index.js';
+import { checkApiKey } from './middlewares/auth.handler.js';
 
 import { logErrors, errorHandler, boomErrorHandler, ormErrorHandler } from './middlewares/error.handler.js';
 
@@ -25,7 +26,7 @@ app.get('/', (req, res) => {
   res.send('Hola mi server en express');
 });
 
-app.get('/nueva-ruta', (req, res) => {
+app.get('/nueva-ruta', checkApiKey, (req, res) => {
   res.send('Hola, soy una nueva ruta');
 });
 
