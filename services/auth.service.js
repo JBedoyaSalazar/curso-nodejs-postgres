@@ -37,11 +37,38 @@ class AuthService {
     };
   }
 
-  async sendMail(email) {
+  async sendRecoveryPassword(email){
     const user = await service.findByEmail(email);
     if (!user) {
       throw boom.unauthorized();
     }
+
+    const payload = {
+      sub: user.id
+    }
+
+    const token = jwt.sign(payload, config.jwtSecret, { expiresIn: '10min' });
+    const link = `http://myfrontend.com/recovery?token=${token}`;
+
+    await service.update(user.id, { recoveryToken: token });
+
+    const mail ={
+      from: config.SMTP_FROM,
+      to: `${user.email}`,
+      subject: 'Email de recuperación de contraseña',
+      html: `
+        <h1>Ingresa al siguiente link para recuperar la contraseña</h1>
+        <a href="${link}" target="_blank">Recuperar contraseña</a>
+        <p>Este link solo estará disponible por 10 minutos</p>
+      `,
+    }
+
+    const res = await this.sendMail(mail)
+    return res;
+  }
+
+  async sendMail(infoMail) {
+
 
     const transporter = nodemailer.createTransport({
       host: config.SMTP_HOST,
@@ -55,16 +82,7 @@ class AuthService {
 
     await transporter.verify();
 
-    await transporter.sendMail({
-      from: config.SMTP_FROM,
-      to: `${user.email}`,
-      subject: 'Recovery Password',
-      text: 'Este es un correo enviado desde Nodemailer.',
-      html: `
-        <h1>Correo de prueba</h1>
-        <p>Si recibiste este correo, Nodemailer está funcionando correctamente con la prueba en Node.js y Insomnia desde el endpoint de recuperación.</p>
-      `,
-    });
+    await transporter.sendMail(infoMail);
 
     return { message: 'Correo de recuperación enviado' };
   }
