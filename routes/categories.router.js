@@ -3,6 +3,7 @@ import express from 'express';
 import CategoryService from './../services/category.service.js';
 import validatorHandler from './../middlewares/validator.handler.js';
 import { createCategorySchema, updateCategorySchema, getCategorySchema, queryCategorySchema } from './../schemas/category.schema.js';
+import passport from 'passport';
 
 const router = express.Router();
 const service = new CategoryService();
@@ -32,6 +33,7 @@ router.get('/:id',
 );
 
 router.post('/',
+  passport.authenticate('jwt', { session: false }),
   validatorHandler(createCategorySchema, 'body'),
   async (req, res, next) => {
     try {
