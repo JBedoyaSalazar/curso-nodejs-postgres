@@ -27,4 +27,9 @@ const queryUserSchema = Joi.object({
   offset
 })
 
-export { createUserSchema, updateUserSchema, getUserSchema, queryUserSchema };
+const changePasswordSchema = Joi.object({
+  token: Joi.string().required(),
+  newPassword: Joi.string().min(8).required()
+});
+
+export { createUserSchema, updateUserSchema, getUserSchema, queryUserSchema, changePasswordSchema };

@@ -21,6 +21,7 @@ class AuthService {
     }
 
     delete user.dataValues.password;
+    delete user.dataValues.recoveryToken;
     return user;
   }
 
@@ -65,6 +66,23 @@ class AuthService {
 
     const res = await this.sendMail(mail)
     return res;
+  }
+
+  async changePassword(token, newPassword){
+    try {
+      const payload = jwt.verify(token, config.jwtSecret);
+      const user = await service.findOne(payload.sub);
+
+      if(user.recoveryToken !== token){
+        throw boom.unauthorized();
+      }
+
+      const hashedPassword = await bycrypt.hash(newPassword, 10);
+      await service.update(user.id, { password: hashedPassword, recoveryToken: null });
+      return { message: 'Contraseña actualizada correctamente' };
+    } catch (error) {
+      throw boom.unauthorized();
+    }
   }
 
   async sendMail(infoMail) {
