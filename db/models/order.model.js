@@ -30,6 +30,11 @@ const OrderSchema = {
   },
   total: {
     type: DataTypes.VIRTUAL,
+    /**
+     * Calculates the order total from loaded items and their pivot-table amounts.
+     *
+     * @returns {number} Sum of item price multiplied by the order amount, or 0 when items are not loaded.
+     */
     get() {
     if (!this.items) return 0;
 
@@ -40,7 +45,16 @@ const OrderSchema = {
   }
 }
 
+/**
+ * Sequelize model for customer orders.
+ */
 class Order extends Model {
+  /**
+   * Associates each order with a customer and its product items.
+   *
+   * @param {Record<string, typeof Model>} models - Registered Sequelize models.
+   * @returns {void}
+   */
   static associate(models) {
     this.belongsTo(models.Customer, {
       as: 'customer',
@@ -54,6 +68,12 @@ class Order extends Model {
     })
   }
 
+  /**
+   * Returns Sequelize metadata for the orders table.
+   *
+   * @param {import('sequelize').Sequelize} sequelize - Sequelize connection instance.
+   * @returns {import('sequelize').ModelOptions} Model configuration.
+   */
   static config(sequelize) {
     return {
       sequelize,

@@ -5,6 +5,12 @@ import { CategorySchema, Category } from './category.model.js'
 import { OrderSchema, Order } from './order.model.js'
 import { OrderProductSchema, OrderProduct } from './order-product.model.js'
 
+/**
+ * Registers every Sequelize model and wires the associations used by the services.
+ *
+ * @param {import('sequelize').Sequelize} sequelize - Sequelize connection instance.
+ * @returns {void}
+ */
 export function setupModels(sequelize) {
   User.init(UserSchema, User.config(sequelize))
   Customer.init(CustomerSchema, Customer.config(sequelize))

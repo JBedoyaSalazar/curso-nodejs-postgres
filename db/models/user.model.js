@@ -40,7 +40,16 @@ const UserSchema = {
   }
 };
 
+/**
+ * Sequelize model for application users.
+ */
 class User extends Model {
+  /**
+   * Associates one user with one customer profile.
+   *
+   * @param {Record<string, typeof Model>} models - Registered Sequelize models.
+   * @returns {void}
+   */
   static associate(models) {
     this.hasOne(models.Customer,{
       as: 'customer',
@@ -48,6 +57,12 @@ class User extends Model {
     })
   }
 
+  /**
+   * Returns Sequelize metadata for the users table.
+   *
+   * @param {import('sequelize').Sequelize} sequelize - Sequelize connection instance.
+   * @returns {import('sequelize').ModelOptions} Model configuration.
+   */
   static config(sequelize) {
     return {
       sequelize,

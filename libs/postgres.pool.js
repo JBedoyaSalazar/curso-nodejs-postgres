@@ -14,4 +14,7 @@ if (!pool) {
   });
 }
 
+/**
+ * Shared PostgreSQL connection pool built from the same database environment variables as Sequelize.
+ */
 export default pool;

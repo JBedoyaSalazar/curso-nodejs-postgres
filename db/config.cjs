@@ -1,7 +1,18 @@
+/**
+ * Encodes a database URL segment while tolerating missing environment variables.
+ *
+ * @param {string|undefined} value - Environment variable value.
+ * @returns {string} URL-safe value.
+ */
 function encode(value) {
   return encodeURIComponent(value || '');
 }
 
+/**
+ * Builds a PostgreSQL connection URL for Sequelize CLI from DB_* environment variables.
+ *
+ * @returns {string} PostgreSQL connection URL.
+ */
 function buildDatabaseUrl() {
   const user = encode(process.env.DB_USER);
   const password = encode(process.env.DB_PASSWORD);

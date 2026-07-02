@@ -2,6 +2,9 @@ import { Strategy } from 'passport-local';
 import AuthService  from '../../../services/auth.service.js';
 const service = new AuthService();
 
+/**
+ * Passport local strategy that authenticates with the `email` request field and password.
+ */
 export const localStrategy = new Strategy({
     usernameField: 'email'
   },

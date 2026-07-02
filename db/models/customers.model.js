@@ -44,7 +44,16 @@ const CustomerSchema = {
   }
 }
 
+/**
+ * Sequelize model for customer profiles linked to users.
+ */
 class Customer extends Model {
+  /**
+   * Associates each customer with a user and its orders.
+   *
+   * @param {Record<string, typeof Model>} models - Registered Sequelize models.
+   * @returns {void}
+   */
   static associate(models) {
       this.belongsTo(models.User, {
         as: 'user'
@@ -55,6 +64,12 @@ class Customer extends Model {
       })
     }
 
+    /**
+     * Returns Sequelize metadata for the customers table.
+     *
+     * @param {import('sequelize').Sequelize} sequelize - Sequelize connection instance.
+     * @returns {import('sequelize').ModelOptions} Model configuration.
+     */
     static config(sequelize) {
       return {
         sequelize,

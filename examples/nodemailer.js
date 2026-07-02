@@ -1,6 +1,11 @@
 import nodemailer from 'nodemailer';
 import { config } from '../config/config.js';
 
+/**
+ * Demonstrates SMTP verification and email delivery with the project's Nodemailer config.
+ *
+ * @returns {Promise<void>}
+ */
 async function sendMail() {
   try {
     console.log({

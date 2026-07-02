@@ -10,6 +10,12 @@ import { ORDER_PRODUCT_TABLE, OrderProductSchema } from '../models/order-product
 /** @type {import('sequelize-cli').Migration} */
 export default {
 
+  /**
+   * Creates the initial store schema tables in dependency order.
+   *
+   * @param {import('sequelize').QueryInterface} queryInterface - Sequelize migration query interface.
+   * @returns {Promise<void>}
+   */
   async up(queryInterface) {
 
     await queryInterface.createTable(
@@ -48,6 +54,12 @@ export default {
 
   },
 
+  /**
+   * Drops the initial store schema tables in reverse dependency order.
+   *
+   * @param {import('sequelize').QueryInterface} queryInterface - Sequelize migration query interface.
+   * @returns {Promise<void>}
+   */
   async down(queryInterface) {
 
     await queryInterface.dropTable(ORDER_PRODUCT_TABLE);

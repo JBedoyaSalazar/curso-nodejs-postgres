@@ -8,6 +8,12 @@ import customersRouter from './customer.router.js'
 import authRouter from './auth.router.js';
 import profileRouter from './profile.router.js';
 
+/**
+ * Mounts all API resource routers under the `/api/v1` prefix.
+ *
+ * @param {import('express').Express} app - Express application instance.
+ * @returns {void}
+ */
 function routerApi(app) {
   const router = express.Router();
   app.use('/api/v1', router);

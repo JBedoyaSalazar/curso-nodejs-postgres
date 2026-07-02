@@ -6,6 +6,9 @@ const options = {
   secretOrKey: config.jwtSecret,
 }
 
+/**
+ * Passport JWT strategy that exposes the verified token payload as `req.user`.
+ */
 export const JwtStrategy = new Strategy(options, (payload, done) => {
   try {
     return done(null, payload);

@@ -32,7 +32,7 @@ router.post('/recovery', async (req, res, next) => {
 
 router.post(
   '/change-password',
-  validatorHandler(changePasswordSchema),
+  validatorHandler(changePasswordSchema, 'body'),
   async (req, res, next) => {
     try {
       const { token, newPassword } = req.body;

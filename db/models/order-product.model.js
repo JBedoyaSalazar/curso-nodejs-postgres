@@ -46,11 +46,25 @@ const OrderProductSchema = {
   }
 }
 
+/**
+ * Sequelize model for the join table between orders and products.
+ */
 class OrderProduct extends Model {
+  /**
+   * Reserved association hook for consistency with the other models.
+   *
+   * @returns {void}
+   */
   static associate() {
     //
   }
 
+  /**
+   * Returns Sequelize metadata for the orders_products table.
+   *
+   * @param {import('sequelize').Sequelize} sequelize - Sequelize connection instance.
+   * @returns {import('sequelize').ModelOptions} Model configuration.
+   */
   static config(sequelize) {
     return {
       sequelize,

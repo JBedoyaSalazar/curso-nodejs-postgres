@@ -1,485 +1,334 @@
 # My Store
 
-Backend REST API para una tienda que gestiona usuarios, clientes, categorías, productos, pedidos y los ítems de pedido. Está construida con Express y Sequelize, y utiliza PostgreSQL como base de datos principal.
+Backend REST API para una tienda. El proyecto gestiona usuarios, clientes, categorias, productos y pedidos con Express, Sequelize y PostgreSQL.
 
-## Descripción
+## Objetivo
 
-Aplicación backend modular que expone un conjunto de endpoints para el manejo de la información de una tienda. Incluye validación de datos con Joi, manejo centralizado de errores con middleware y persistencia estructurada a través de Sequelize.
+El objetivo del proyecto es exponer una API modular para practicar y organizar un backend Node.js con:
 
-## Características
+- Rutas REST por recurso.
+- Servicios para operaciones de negocio y persistencia.
+- Modelos y migraciones con Sequelize.
+- Validacion de requests con Joi.
+- Autenticacion con Passport, JWT y estrategia local.
+- Manejo centralizado de errores con middlewares de Express.
 
-- CRUD de categorías
-- CRUD de productos
-- CRUD de usuarios
-- CRUD de clientes
-- CRUD de pedidos
-- Añadir ítems a pedidos
-- Validación de entrada con Joi
-- Manejo centralizado de errores con middleware
-- Persistencia con PostgreSQL y Sequelize
-- Soporte de paginación con `limit` y `offset`
-- Configuración de entorno compatible con Docker Compose
+## Tecnologias Utilizadas
 
-## Tecnologías utilizadas
+- Node.js con modulos ES.
+- Express para el servidor HTTP.
+- PostgreSQL como base de datos principal.
+- Sequelize y Sequelize CLI para modelos, asociaciones y migraciones.
+- Joi para validacion de `body`, `params` y `query`.
+- Passport, `passport-local` y `passport-jwt` para autenticacion.
+- JSON Web Token para emision y verificacion de tokens.
+- bcrypt para hashing y verificacion de passwords.
+- Nodemailer para envio de correo de recuperacion.
+- @hapi/boom para errores HTTP.
+- cors para configuracion de origenes permitidos.
+- Docker Compose para levantar PostgreSQL y pgAdmin.
+- ESLint y Prettier como herramientas de calidad/formato.
 
-| Tecnología | Propósito |
-| --- | --- |
-| Node.js | Entorno de ejecución backend |
-| Express | Framework HTTP para API REST |
-| Sequelize | ORM para PostgreSQL |
-| PostgreSQL | Base de datos relacional |
-| pg / pg-hstore | Drivers de PostgreSQL |
-| Joi | Validación de request params y body |
-| @hapi/boom | Generación de errores HTTP consistentes |
-| CORS | Configuración de orígenes permitidos |
-| Docker Compose | Orquestación de servicios de base de datos |
-| sequelize-cli | Migrations y administración de BD |
-| ESLint / Prettier | Calidad y formato de código |
+## Arquitectura Observada
 
-## Arquitectura
+La aplicacion esta organizada por capas:
 
-El proyecto está organizado en capas claras:
+- `index.js`: crea la aplicacion Express, configura JSON, CORS, rutas globales y middlewares de error.
+- `routes/`: define routers Express por recurso y monta la API bajo `/api/v1`.
+- `services/`: concentra las operaciones sobre modelos Sequelize y logica de autenticacion.
+- `schemas/`: contiene esquemas Joi para validar entradas HTTP.
+- `middlewares/`: contiene validacion, autorizacion simple y manejo de errores.
+- `db/models/`: define modelos Sequelize y asociaciones.
+- `db/migrations/`: contiene migraciones Sequelize CLI.
+- `libs/`: contiene la instancia Sequelize y un pool PostgreSQL.
+- `utils/auth/`: registra estrategias Passport local y JWT.
+- `examples/`: scripts aislados para probar bcrypt, JWT y Nodemailer.
 
-- `index.js`: arranque del servidor Express, configuración de CORS y middleware global.
-- `routes/`: definición de rutas por recurso.
-- `services/`: lógica de negocio y operaciones de base de datos.
-- `schemas/`: validación de datos de requests con Joi.
-- `middlewares/`: validación y manejo centralizado de errores.
-- `db/models/`: definición de modelos Sequelize y asociaciones entre entidades.
-- `libs/sequelize.js`: conexión y configuración de Sequelize.
-- `db/migrations/`: scripts de migración para crear las tablas.
+## Estructura de Carpetas
 
-La API se monta bajo el prefijo `/api/v1`.
-
-## Estructura de carpetas
-
-```
+```text
 .
 ├── config/
-│   └── config.js                 # Configuración de entorno para la aplicación
+│   └── config.js
 ├── db/
-│   ├── config.cjs                # Configuración Sequelize para migraciones
-│   ├── migrations/               # Migraciones Sequelize
-│   └── models/                   # Modelos Sequelize y esquemas de tablas
+│   ├── config.cjs
+│   ├── migrations/
+│   └── models/
+├── examples/
 ├── libs/
-│   ├── postgres.pool.js          # Pool PostgreSQL alternativo
-│   └── sequelize.js              # Inicialización de Sequelize
+│   ├── postgres.pool.js
+│   └── sequelize.js
 ├── middlewares/
-│   ├── error.handler.js          # Middlewares de manejo de errores
-│   └── validator.handler.js      # Middleware de validación con Joi
+│   ├── auth.handler.js
+│   ├── error.handler.js
+│   └── validator.handler.js
 ├── routes/
+│   ├── auth.router.js
 │   ├── categories.router.js
 │   ├── customer.router.js
+│   ├── index.js
 │   ├── orders.router.js
 │   ├── products.router.js
-│   ├── users.router.js
-│   └── index.js                  # Enrutador principal con `/api/v1`
+│   ├── profile.router.js
+│   └── users.router.js
 ├── schemas/
-│   ├── category.schema.js
-│   ├── customer.schema.js
-│   ├── order.schema.js
-│   ├── product.schema.js
-│   └── user.schema.js
 ├── services/
-│   ├── category.service.js
-│   ├── customers.service.js
-│   ├── order.service.js
-│   ├── product.service.js
-│   └── user.service.js
-├── docker-compose.yml            # Definición de contenedores Docker
-├── index.js                      # Entrada principal de la aplicación
+├── docker-compose.yml
+├── frontend.html
+├── index.js
 ├── package.json
+├── Procfile
 └── README.md
 ```
 
-## Instalación
+## Requisitos
 
-1. Clonar el repositorio:
-   ```bash
-   git clone <repositorio> my-store-data
-   cd my-store-data
-   ```
-2. Instalar dependencias:
-   ```bash
-   npm install
-   ```
-3. Configurar variables de entorno en un archivo `.env`.
-4. Ejecutar migraciones:
-   ```bash
-   npm run db:migrate
-   ```
-5. Iniciar el servidor:
-   ```bash
-   npm run dev
-   ```
+- Node.js `>=18.11`.
+- npm.
+- PostgreSQL accesible desde las variables de entorno.
+- Docker y Docker Compose, opcionalmente, para levantar PostgreSQL y pgAdmin con `docker-compose.yml`.
 
-## Configuración
+## Instalacion
 
-El proyecto utiliza variables de entorno para configurar la conexión a la base de datos y el puerto del servidor.
+```bash
+npm install
+```
 
-### Variables de entorno
+Crear un archivo `.env` basado en `.env.example` y completar las variables necesarias para la base de datos y las funcionalidades usadas.
 
-- `NODE_ENV`: entorno de ejecución (`dev`, `production`, etc.)
-- `PORT`: puerto donde corre Express
-- `DB_USER`: usuario de PostgreSQL
-- `DB_PASSWORD`: contraseña de PostgreSQL
-- `DB_HOST`: host de PostgreSQL
-- `DB_NAME`: nombre de la base de datos PostgreSQL
-- `DB_PORT`: puerto de PostgreSQL
+Aplicar migraciones:
 
-> No identificado en el proyecto analizado: valores predeterminados exactos de variables de entorno en un archivo `.env`.
+```bash
+npm run db:migrate
+```
 
-## Docker
+## Variables de Entorno
 
-El proyecto incluye un `docker-compose.yml` con los siguientes servicios:
+Variables leidas por `config/config.js`:
 
-- `postgres`
-  - imagen: `postgres:13`
-  - base de datos: `my_store`
-  - usuario: `jefred`
-  - contraseña: `admin123`
-  - puerto local: `5433`
-- `pgadmin4`
-  - imagen: `dpage/pgadmin4`
-  - email: `admin@mail.com`
-  - password: `root`
-  - puerto local: `5050`
-- `mysql`
-  - imagen: `mysql:latest`
-  - base de datos: `my_store`
-  - usuario: `jefred`
-  - contraseña: `admin123`
-  - puerto local: `3307`
-- `phpmyadmin`
-  - imagen: `phpmyadmin:latest`
-  - puerto local: `8081`
+- `NODE_ENV`: entorno de ejecucion. Por defecto usa `dev`.
+- `PORT`: puerto del servidor. Por defecto usa `3000`.
+- `DB_USER`: usuario de PostgreSQL.
+- `DB_PASSWORD`: password de PostgreSQL.
+- `DB_HOST`: host de PostgreSQL.
+- `DB_NAME`: nombre de la base de datos.
+- `DB_PORT`: puerto de PostgreSQL.
+- `API_KEY`: clave usada por el middleware `checkApiKey` en `/nueva-ruta`.
+- `JWT_SECRET`: secreto para firmar y verificar JWT.
+- `SMTP_HOST`: host SMTP para Nodemailer.
+- `SMTP_PORT`: puerto SMTP.
+- `SMTP_USER`: usuario SMTP.
+- `SMTP_PASSWORD`: password SMTP.
+- `SMTP_FROM`: remitente del correo de recuperacion.
+- `SMTP_TO`: destinatario usado por el ejemplo `examples/nodemailer.js`.
 
-### Levantar el entorno con Docker Compose
+Variables adicionales leidas por `db/config.cjs` para Sequelize CLI:
+
+- `DATABASE_URL`: URL completa de conexion, si se prefiere sobre `DB_*`.
+- `DB_SSL`: cuando vale `true`, habilita SSL en configuracion de produccion.
+
+El archivo `.env.example` incluido actualmente declara:
+
+```env
+PORT=3000
+DB_USER=''
+DB_PASSWORD=''
+DB_HOST=''
+DB_NAME=''
+DB_PORT=''
+```
+
+## Scripts Disponibles
+
+- `npm run dev`: ejecuta `node --env-file=.env --watch index.js`.
+- `npm start`: ejecuta `node --env-file=.env index.js`.
+- `npm run lint`: ejecuta ESLint.
+- `npm run migrations:generate -- <nombre>`: genera una migracion con Sequelize CLI.
+- `npm run db:migrate`: aplica migraciones pendientes.
+- `npm run db:migrate:undo`: revierte la ultima migracion aplicada.
+
+## Ejecucion
+
+Levantar base de datos con Docker Compose, si se usa el archivo incluido:
 
 ```bash
 docker compose up -d
 ```
 
-> Nota: aunque Docker Compose define servicios para MySQL y phpMyAdmin, el backend actual utiliza PostgreSQL como persistencia principal.
+Ejecutar en modo desarrollo:
 
-## Base de datos
+```bash
+npm run dev
+```
 
-La aplicación utiliza PostgreSQL y Sequelize. Las tablas definidas son:
+Ejecutar en modo normal:
 
-- `users`
-- `customers`
-- `categories`
-- `products`
-- `orders`
-- `orders_products`
+```bash
+npm start
+```
 
-### Entidades principales
+El servidor monta la API en `/api/v1`. Tambien existen dos rutas fuera de ese prefijo:
 
-- `User`
-  - `id`, `email`, `password`, `role`, `created_at`
-- `Customer`
-  - `id`, `name`, `last_name`, `phone`, `user_id`, `created_at`
-- `Category`
-  - `id`, `name`, `image`, `created_at`
-- `Product`
-  - `id`, `name`, `image`, `description`, `price`, `category_id`, `created_at`
-- `Order`
-  - `id`, `customer_id`, `created_at`
-- `OrderProduct`
-  - `id`, `amount`, `order_id`, `product_id`, `created_at`
+- `GET /`: responde un texto simple.
+- `GET /nueva-ruta`: usa el middleware `checkApiKey` y espera el header `api`.
 
-## Modelos y relaciones
+## Docker Compose
 
-### User
+`docker-compose.yml` define:
 
-- Tabla: `users`
-- Campos: `id`, `email`, `password`, `role`, `created_at`
-- Relación: `hasOne(Customer)`
+- `postgres`: imagen `postgres:13`, base `my_store`, usuario `jefred`, password `admin123`, puerto local `5433`.
+- `pgadmin4`: imagen `dpage/pgadmin4`, email `admin@mail.com`, password `root`, puerto local `5050`.
 
-### Customer
+## Flujo General de la API
 
-- Tabla: `customers`
-- Campos: `id`, `name`, `last_name`, `phone`, `user_id`, `created_at`
-- Relaciones:
-  - `belongsTo(User)`
-  - `hasMany(Order)`
+1. `index.js` crea la aplicacion Express.
+2. Se habilita `express.json()`.
+3. Se configura CORS con una lista blanca.
+4. Se registran estrategias Passport desde `utils/auth/index.js`.
+5. `routerApi(app)` monta los routers bajo `/api/v1`.
+6. Las rutas validan entradas con `validatorHandler` cuando corresponde.
+7. Los servicios consultan o modifican modelos Sequelize.
+8. Los errores pasan por `logErrors`, `ormErrorHandler`, `boomErrorHandler` y `errorHandler`.
 
-### Category
+## Endpoints Implementados
 
-- Tabla: `categories`
-- Campos: `id`, `name`, `image`, `created_at`
-- Relación: `hasMany(Product)`
+### Auth
 
-### Product
+- `POST /api/v1/auth/login`: autentica con Passport local usando `email` y `password`; devuelve `user` y `token`.
+- `POST /api/v1/auth/recovery`: recibe `email`, genera token de recuperacion y envia correo con Nodemailer.
+- `POST /api/v1/auth/change-password`: recibe `token` y `newPassword`; valida el token de recuperacion y actualiza el password.
 
-- Tabla: `products`
-- Campos: `id`, `name`, `image`, `description`, `price`, `category_id`, `created_at`
-- Relación: `belongsTo(Category)`
+### Profile
 
-### Order
+- `GET /api/v1/profile/my-orders`: requiere JWT y lista pedidos asociados al usuario autenticado.
 
-- Tabla: `orders`
-- Campos: `id`, `customer_id`, `created_at`
-- Relaciones:
-  - `belongsTo(Customer)`
-  - `belongsToMany(Product)` a través de `OrderProduct`
-- Campo virtual:
-  - `total` calculado desde los ítems del pedido
+### Products
 
-### OrderProduct
+- `GET /api/v1/products`: lista productos con categoria. Soporta `limit`, `offset`, `price`, `price_min` y `price_max`.
+- `GET /api/v1/products/:id`: obtiene un producto con categoria.
+- `POST /api/v1/products`: crea un producto.
+- `PATCH /api/v1/products/:id`: actualiza un producto.
+- `DELETE /api/v1/products/:id`: elimina un producto.
 
-- Tabla: `orders_products`
-- Campos: `id`, `amount`, `order_id`, `product_id`, `created_at`
-- Función: tabla asociativa entre pedidos y productos
+### Categories
+
+Estas rutas usan JWT y validacion de roles:
+
+- `GET /api/v1/categories`: roles `admin` o `customer`.
+- `GET /api/v1/categories/:id`: roles `admin` o `customer`.
+- `POST /api/v1/categories`: rol `admin`.
+- `PATCH /api/v1/categories/:id`: roles `admin` o `seller`.
+- `DELETE /api/v1/categories/:id`: rol `admin`.
+
+### Users
+
+- `GET /api/v1/users`: lista usuarios con cliente asociado cuando existe. Soporta `limit` y `offset`.
+- `GET /api/v1/users/:id`: obtiene un usuario por id.
+- `POST /api/v1/users`: crea un usuario y hashea el password.
+- `PATCH /api/v1/users/:id`: actualiza un usuario.
+- `DELETE /api/v1/users/:id`: elimina un usuario.
+
+### Customers
+
+- `GET /api/v1/customers`: lista clientes con usuario asociado. Soporta `limit` y `offset`.
+- `POST /api/v1/customers`: crea un cliente. El esquema Joi acepta `userId` o un objeto `user`; el servicio actual crea cliente y usuario dentro de una transaccion cuando recibe `user`.
+- `PATCH /api/v1/customers/:id`: actualiza un cliente.
+- `DELETE /api/v1/customers/:id`: elimina un cliente.
+
+### Orders
+
+- `GET /api/v1/orders`: lista pedidos con cliente, usuario e items. Soporta `limit` y `offset`.
+- `GET /api/v1/orders/:id`: obtiene un pedido con cliente, usuario e items.
+- `POST /api/v1/orders`: crea un pedido para un `customerId`.
+- `PATCH /api/v1/orders/:id`: actualiza el `customerId` de un pedido.
+- `DELETE /api/v1/orders/:id`: elimina un pedido.
+- `POST /api/v1/orders/add-item`: agrega un producto a un pedido mediante `orderId`, `productId` y `amount`.
+
+## Modelos y Relaciones
+
+- `User`: tabla `users`; tiene `email`, `password`, `recoveryToken`, `role` y `createdAt`. Relacion `hasOne(Customer)` como `customer`.
+- `Customer`: tabla `customers`; pertenece a `User` como `user` y tiene muchos `Order` como `orders`.
+- `Category`: tabla `categories`; tiene muchos `Product` como `products`.
+- `Product`: tabla `products`; pertenece a `Category` como `category`.
+- `Order`: tabla `orders`; pertenece a `Customer` como `customer` y pertenece a muchos `Product` como `items` mediante `OrderProduct`.
+- `OrderProduct`: tabla `orders_products`; tabla intermedia entre pedidos y productos.
+
+`Order` incluye el campo virtual `total`, calculado cuando los `items` estan cargados.
+
+## Middlewares Implementados
+
+- `validatorHandler(schema, property)`: valida `req.body`, `req.params` o `req.query` con Joi y envia errores `400` usando Boom.
+- `checkApiKey`: compara el header `api` contra `config.apiKey`.
+- `checkAdminRole`: permite continuar solo a usuarios con rol `admin`.
+- `checkRoles(...roles)`: permite continuar solo si `req.user.role` esta dentro de los roles permitidos.
+- `logErrors`: registra errores en consola.
+- `ormErrorHandler`: convierte `Sequelize.ValidationError` en respuesta `409`.
+- `boomErrorHandler`: responde errores Boom con su `statusCode` y payload.
+- `errorHandler`: fallback que responde `500`.
+
+## Validaciones con Joi
+
+- `user.schema.js`: valida `email`, `password`, `role`, `id`, paginacion y cambio de password.
+- `customer.schema.js`: valida datos de cliente, `userId` u objeto `user`, y paginacion.
+- `product.schema.js`: valida producto, filtros de precio y paginacion.
+- `category.schema.js`: valida categoria y paginacion.
+- `order.schema.js`: valida creacion/actualizacion de pedidos, `add-item` y paginacion.
+
+## Configuracion de CORS
+
+`index.js` define una lista blanca con:
+
+- `http://localhost:8080`
+- `https://myapp.co`
+
+Tambien permite requests sin `origin`. Si el origen no esta permitido, CORS llama el callback con `new Error('no permitido')`.
+
+## Manejo de Errores
+
+El orden de middlewares de error registrado en `index.js` es:
+
+1. `logErrors`
+2. `ormErrorHandler`
+3. `boomErrorHandler`
+4. `errorHandler`
+
+Los servicios usan `boom.notFound`, `boom.unauthorized` o `boom.forbidden` en varios flujos. Las validaciones Joi se transforman en `boom.badRequest`.
+
+## Dependencias Principales
+
+- `express`: servidor y routing HTTP.
+- `sequelize`: ORM usado por modelos y servicios.
+- `pg` y `pg-hstore`: soporte PostgreSQL.
+- `joi`: validacion de datos de entrada.
+- `@hapi/boom`: errores HTTP consistentes.
+- `bcrypt`: hashing y comparacion de passwords.
+- `jsonwebtoken`: firma y verificacion de JWT.
+- `passport`, `passport-local`, `passport-jwt`: autenticacion local y por bearer token.
+- `nodemailer`: envio de correo para recuperacion de password.
+- `cors`: control de origenes permitidos.
+- `@faker-js/faker`: dependencia instalada, sin uso observado en el codigo fuente actual.
 
 ## Migraciones
 
-Las migraciones se encuentran en `db/migrations/` y crean las tablas correspondientes a los modelos definidos en `db/models/`.
+Las migraciones existentes:
 
-### Comandos de migración
+- `20260605174638-initial-schema.js`: crea tablas principales.
+- `20260702214428-recoveryToken.js`: agrega `recovery_token` a `users`.
 
-- Ejecutar migraciones:
-  ```bash
-  npm run db:migrate
-  ```
-- Revertir la última migración:
-  ```bash
-  npm run db:migrate:undo
-  ```
-- Generar nueva migración:
-  ```bash
-  npm run migrations:generate -- <nombre-de-migracion>
-  ```
+No se observaron seeders en la estructura actual.
 
-> No se encontraron seeders en el proyecto analizado.
+## Recomendaciones Futuras
 
-## API REST
+Estas son mejoras posibles identificadas durante la revision; no representan funcionalidades actuales:
 
-La API está disponible en `/api/v1`.
+- Completar `.env.example` con todas las variables leidas por `config/config.js`.
+- Revisar el flujo de `CustomerService.create` para alinear la implementacion con el esquema que permite `userId` u objeto `user`.
+- Evitar que `validatorHandler` continue la cadena despues de enviar un error de validacion.
+- Proteger de forma consistente los endpoints que deban requerir autenticacion.
+- Agregar pruebas automatizadas para servicios, middlewares y rutas.
+- Revisar codigos de respuesta en operaciones `DELETE`, que actualmente responden `201` en varias rutas.
+- Remover logs de depuracion en handlers finales si se prepara para produccion.
 
-### Endpoints documentados
+## Licencia
 
-#### Categorías
-
-- `GET /api/v1/categories`
-  - Descripción: lista categorías.
-  - Query params: `limit`, `offset`.
-
-- `GET /api/v1/categories/:id`
-  - Descripción: obtiene una categoría por `id`.
-  - Path params: `id`.
-
-- `POST /api/v1/categories`
-  - Descripción: crea una categoría.
-  - Body esperado:
-    ```json
-    {
-      "name": "Electrónica",
-      "image": "https://example.com/image.png"
-    }
-    ```
-
-- `PATCH /api/v1/categories/:id`
-  - Descripción: actualiza una categoría.
-  - Body parcial: `name`, `image`.
-
-- `DELETE /api/v1/categories/:id`
-  - Descripción: elimina una categoría.
-
-#### Productos
-
-- `GET /api/v1/products`
-  - Descripción: lista productos.
-  - Query params: `limit`, `offset`, `price`, `price_min`, `price_max`.
-
-- `GET /api/v1/products/:id`
-  - Descripción: obtiene un producto por `id`.
-
-- `POST /api/v1/products`
-  - Descripción: crea un producto.
-  - Body esperado:
-    ```json
-    {
-      "name": "Teclado mecánico",
-      "price": 120,
-      "description": "Teclado mecánico RGB para gaming.",
-      "image": "https://example.com/keyboard.png",
-      "categoryId": 1
-    }
-    ```
-
-- `PATCH /api/v1/products/:id`
-  - Descripción: actualiza un producto.
-  - Body parcial: `name`, `price`, `description`, `image`, `categoryId`.
-
-- `DELETE /api/v1/products/:id`
-  - Descripción: elimina un producto.
-
-#### Usuarios
-
-- `GET /api/v1/users`
-  - Descripción: lista usuarios.
-  - Query params: `limit`, `offset`.
-
-- `GET /api/v1/users/:id`
-  - Descripción: obtiene un usuario por `id`.
-
-- `POST /api/v1/users`
-  - Descripción: crea un usuario.
-  - Body esperado:
-    ```json
-    {
-      "email": "admin@example.com",
-      "password": "password123",
-      "role": "admin"
-    }
-    ```
-
-- `PATCH /api/v1/users/:id`
-  - Descripción: actualiza un usuario.
-
-- `DELETE /api/v1/users/:id`
-  - Descripción: elimina un usuario.
-
-#### Clientes
-
-- `GET /api/v1/customers`
-  - Descripción: lista clientes.
-  - Query params: `limit`, `offset`.
-
-- `POST /api/v1/customers`
-  - Descripción: crea un cliente.
-  - Body esperado:
-    ```json
-    {
-      "name": "Carlos",
-      "lastName": "Pérez",
-      "phone": "123456789",
-      "user": {
-        "email": "carlos@example.com",
-        "password": "secret123"
-      }
-    }
-    ```
-  - Nota: se puede enviar `userId` en lugar de `user` siempre que uno de los dos campos sea provisto.
-
-- `PATCH /api/v1/customers/:id`
-  - Descripción: actualiza un cliente.
-
-- `DELETE /api/v1/customers/:id`
-  - Descripción: elimina un cliente.
-
-#### Pedidos
-
-- `GET /api/v1/orders`
-  - Descripción: lista pedidos.
-  - Query params: `limit`, `offset`.
-
-- `GET /api/v1/orders/:id`
-  - Descripción: obtiene un pedido por `id`.
-
-- `POST /api/v1/orders`
-  - Descripción: crea un pedido.
-  - Body esperado:
-    ```json
-    {
-      "customerId": 1
-    }
-    ```
-
-- `PATCH /api/v1/orders/:id`
-  - Descripción: actualiza un pedido.
-
-- `DELETE /api/v1/orders/:id`
-  - Descripción: elimina un pedido.
-
-- `POST /api/v1/orders/add-item`
-  - Descripción: añade un ítem a un pedido.
-  - Body esperado:
-    ```json
-    {
-      "orderId": 1,
-      "productId": 2,
-      "amount": 3
-    }
-    ```
-
-## Validaciones
-
-Las validaciones se implementan mediante Joi en los esquemas de `schemas/`:
-
-- `category.schema.js`
-  - `name`: string 3-15 caracteres
-  - `image`: URI
-  - `limit`, `offset`: entero
-- `product.schema.js`
-  - `name`: string 3-15
-  - `price`: entero mínimo 10
-  - `description`: string 10-100
-  - `image`: URI
-  - `categoryId`: entero
-  - `price_min` y `price_max`: rango condicional
-- `user.schema.js`
-  - `email`: email válido
-  - `password`: mínimo 8 caracteres
-  - `role`: string
-- `order.schema.js`
-  - `customerId`: entero requerido
-  - `orderId`, `productId`, `amount`: entero requerido para `add-item`
-- `customer.schema.js`
-  - `name`, `lastName`, `phone`: strings
-  - `userId`: entero
-  - `user`: objeto con `email` y `password`
-  - `xor('userId','user')`: exige una sola de las dos opciones
-
-## Paginación
-
-Los endpoints que soportan `limit` y `offset` son:
-
-- `GET /api/v1/categories`
-- `GET /api/v1/products`
-- `GET /api/v1/users`
-- `GET /api/v1/customers`
-- `GET /api/v1/orders`
-
-## Manejo de errores
-
-El flujo de manejo de errores en `index.js` utiliza:
-
-1. `logErrors`: registra el error en consola.
-2. `ormErrorHandler`: captura errores de Sequelize (`ValidationError`) y responde con `409`.
-3. `boomErrorHandler`: formatea errores `boom` con su status HTTP.
-4. `errorHandler`: responde con `500` para errores no manejados.
-
-## Scripts disponibles
-
-Extraídos de `package.json`:
-
-- `npm run dev`: ejecuta `node --env-file=.env --watch index.js`
-- `npm start`: ejecuta `node --env-file=.env index.js`
-- `npm run lint`: ejecuta `eslint`
-- `npm run migrations:generate`: genera una migración con `sequelize-cli`
-- `npm run db:migrate`: aplica migraciones
-- `npm run db:migrate:undo`: revierte la última migración
-
-## Flujo de desarrollo
-
-1. Instalar dependencias.
-2. Configurar variables de entorno en `.env`.
-3. Levantar la base de datos con Docker Compose o una instancia local.
-4. Ejecutar las migraciones con `npm run db:migrate`.
-5. Iniciar el servidor con `npm run dev`.
-6. Desarrollar en las capas de rutas, servicios, validaciones y modelos según corresponda.
-
-## Consideraciones técnicas
-
-- Separación clara entre rutas, servicios y modelos.
-- Uso de Joi para validación de requests.
-- Manejo centralizado de errores con middleware.
-- Relaciones explícitas de Sequelize entre entidades.
-- Transacciones utilizadas en el servicio de clientes para crear usuario y cliente juntos.
-- API montada bajo `/api/v1`.
-
-## Autor
-
-Jefred Bedoya S.
+MIT.

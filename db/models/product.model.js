@@ -46,13 +46,28 @@ const ProductSchema = {
   }
 }
 
+/**
+ * Sequelize model for products sold by the store.
+ */
 class Product extends Model {
+  /**
+   * Associates each product with its category.
+   *
+   * @param {Record<string, typeof Model>} models - Registered Sequelize models.
+   * @returns {void}
+   */
   static associate(models) {
     this.belongsTo(models.Category, {
       as: 'category'
     })
   }
 
+  /**
+   * Returns Sequelize metadata for the products table.
+   *
+   * @param {import('sequelize').Sequelize} sequelize - Sequelize connection instance.
+   * @returns {import('sequelize').ModelOptions} Model configuration.
+   */
   static config(sequelize) {
     return {
       sequelize,

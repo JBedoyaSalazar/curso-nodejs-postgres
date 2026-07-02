@@ -26,7 +26,16 @@ const CategorySchema = {
   }
 }
 
+/**
+ * Sequelize model for product categories.
+ */
 class Category extends Model {
+  /**
+   * Associates a category with its products.
+   *
+   * @param {Record<string, typeof Model>} models - Registered Sequelize models.
+   * @returns {void}
+   */
   static associate(models) {
     this.hasMany(models.Product, {
       as: 'products',
@@ -34,6 +43,12 @@ class Category extends Model {
     })
   }
 
+  /**
+   * Returns Sequelize metadata for the categories table.
+   *
+   * @param {import('sequelize').Sequelize} sequelize - Sequelize connection instance.
+   * @returns {import('sequelize').ModelOptions} Model configuration.
+   */
   static config(sequelize) {
     return {
       sequelize,
