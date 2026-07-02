@@ -1,8 +1,8 @@
 import express from 'express';
 import passport from 'passport';
-import jwt from 'jsonwebtoken';
-import { config } from '../config/config.js';
+import AuthService from '../services/auth.service.js';
 
+const service = new AuthService();
 const router = express.Router();
 
 router.post(
@@ -11,21 +11,21 @@ router.post(
   async (req, res, next) => {
     try {
       const user = req.user;
-
-      const payload = {
-        sub: user.id,
-        role: user.role,
-      };
-
-      const token = jwt.sign(payload, config.jwtSecret);
-      res.status(201).json({
-        user,
-        token,
-      });
+      res.json(service.signToken(user));
     } catch (error) {
       next(error);
     }
   }
 );
+
+router.post('/recovery', async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    const response = await service.sendMail(email);
+    res.json(response);
+  } catch (error) {
+    next(error);
+  }
+});
 
 export default router;
