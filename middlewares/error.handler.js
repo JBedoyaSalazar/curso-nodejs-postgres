@@ -1,11 +1,19 @@
 import { ValidationError } from "sequelize";
 
 function logErrors (err, req, res, next) {
+  console.error("====== ERROR ======");
   console.error(err);
+  console.error(err.stack);
   next(err);
 }
 
-function errorHandler(err, req, res) {
+function errorHandler(err, req, res, next) {
+
+  console.log("ERROR HANDLER");
+  console.log(err);
+  console.log(res);
+  console.log(typeof res.status);
+
   res.status(500).json({
     message: err.message,
     stack: err.stack,
@@ -23,7 +31,7 @@ function boomErrorHandler(err, req, res, next) {
 
 function ormErrorHandler(err, req, res, next){
   if(err instanceof ValidationError){
-    res.status(409).json({
+    return res.status(409).json({
       statusCode: 409,
       message: err.name,
     })

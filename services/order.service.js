@@ -1,18 +1,17 @@
 import boom from '@hapi/boom';
-import { models } from './../libs/sequelize.js'
+import { models } from './../libs/sequelize.js';
 
 class OrderService {
-
-  constructor() { }
+  constructor() {}
 
   async create(data) {
-    const newOrder = await models.Order.create(data)
+    const newOrder = await models.Order.create(data);
     return newOrder;
   }
 
   async addItem(data) {
-    const newItem = await models.OrderProduct.create(data)
-    return newItem
+    const newItem = await models.OrderProduct.create(data);
+    return newItem;
   }
 
   async find(query) {
@@ -20,20 +19,35 @@ class OrderService {
       include: [
         {
           association: 'customer',
-          include: ['user']
+          include: ['user'],
         },
-        'items'
-      ]
+        'items',
+      ],
     };
 
     const { limit, offset } = query;
 
     if (limit && offset) {
-      options.limit = limit
-      options.offset = offset
+      options.limit = limit;
+      options.offset = offset;
     }
 
-    const orders = await models.Order.findAll(options)
+    const orders = await models.Order.findAll(options);
+    return orders;
+  }
+
+  async findByUser(userId) {
+    const orders = await models.Order.findAll({
+      where: {
+        '$customer.user.id$': userId,
+      },
+      include: [
+        {
+          association: 'customer',
+          include: ['user']
+        },
+      ],
+    });
     return orders;
   }
 
@@ -42,31 +56,30 @@ class OrderService {
       include: [
         {
           association: 'customer',
-          include: ['user']
+          include: ['user'],
         },
-        'items'
-      ]
+        'items',
+      ],
     });
 
     if (!Order) {
-      throw boom.notFound('Order not found')
+      throw boom.notFound('Order not found');
     }
 
-    return Order
+    return Order;
   }
 
   async update(id, changes) {
-    const order = await this.findOne(id)
-    const res = await order.update(changes)
-    return res
+    const order = await this.findOne(id);
+    const res = await order.update(changes);
+    return res;
   }
 
   async delete(id) {
-    const order = await this.findOne(id)
-    order.destroy()
+    const order = await this.findOne(id);
+    order.destroy();
     return { id };
   }
-
 }
 
 export default OrderService;
